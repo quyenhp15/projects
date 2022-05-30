@@ -1,14 +1,20 @@
 const mongoose = require('mongoose')
 
 const signupTemplate = new mongoose.Schema({
-    fullName: {
+    studentID: {
         type: String,
         required: true
     },
-    username: {
+    studentName: {
         type: String,
         required: true
     },
+    dateOfBirth: {
+        type: Date,
+        required: true,
+        default: Date.now
+    }
+    ,
     email: {
         type: String,
         required: true
@@ -23,4 +29,4 @@ const signupTemplate = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('user', signupTemplate)
+module.exports = mongoose.model('students', signupTemplate)

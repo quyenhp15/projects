@@ -3,22 +3,10 @@ import './Registration.css'
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 
+import 'antd/dist/antd.css'
+import { Input, DatePicker, Button, message, Form } from 'antd';
+
 const Registration = () => {
-
-  // constructor() {
-  //   super()
-  //   this.state = {
-  //     fullName: '',
-  //     username: '',
-  //     email: '',
-  //     password: ''
-  //   }
-  // }
-
-  const usernameRef = useRef(null)
-  const fullNameRef = useRef(null)
-  const emailRef = useRef(null)
-  const passwordRef = useRef(null)
 
   const navigate = useNavigate()
 
@@ -31,20 +19,29 @@ const Registration = () => {
     event.preventDefault()
 
     const registered = {
-      "fullName": fullNameRef.current.value,
-      "username": usernameRef.current.value,
-      "password": passwordRef.current.value,
-      "email": emailRef.current.value
+      // "studentID": studentIDRef.current.value,
+      // "studentName": studentNameRef.current.value,
+      // "dateOfBirth": dateOfBirthRef.current.value,
+      // "password": passwordRef.current.value,
+      // "email": emailRef.current.value
     }
 
-    axios.post('http://localhost:4000/app/signup', registered).then(response => console.log(response.data))
-
-    console.log(fullNameRef.current.value)
-    console.log(usernameRef.current.value)
-    console.log(passwordRef.current.value)
-    console.log(emailRef.current.value)
+    axios.post('http://localhost:4000/LibSystem/signup', registered).then(response => console.log(response.data))
 
   }
+
+  const onchange = (e) => {
+    console.log(e.target.value)
+  }
+
+  const onFinish = (values) => {
+    console.log('Success:', values.username);
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  };
+
 
   return (
 
@@ -56,12 +53,52 @@ const Registration = () => {
         <div className="signIn__title">
           <h1>Sign Up</h1>
         </div>
-        <input ref={fullNameRef} />
-        <input ref={emailRef} />
 
-        <input placeholder="Username" className="input__user-name" ref={usernameRef} />
-        <input type="password" placeholder="Password" className="input__password" ref={passwordRef} />
-        <input type="password" placeholder="Confirm password" className="input__password" />
+        <Form name="basic" labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} initialValues={{ remember: true }}
+          onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete="off" >
+          <Form.Item name="studentID" rules={[{
+            required: true,
+            message: 'Please input student ID!',
+          },]}          >
+            <Input placeholder="Student ID" className="inputInfo" />
+          </Form.Item>
+
+          <Form.Item name="username" rules={[{
+            required: true,
+            message: 'Please input your username!',
+          },]}          >
+            <Input placeholder="Student ID" className="inputInfo" />
+          </Form.Item>
+
+          <Form.Item label="Password" name="password" rules={[{
+            required: true,
+            message: 'Please input your password!',
+          },]}          >
+            <Input.Password />
+          </Form.Item>
+
+          <Form.Item
+            wrapperCol={{
+              offset: 8,
+              span: 16,
+            }}
+          >
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+
+        </Form>
+
+        <input placeholder="Student ID" className="inputInfo" />
+        <input placeholder="Student name" className="inputInfo" />
+        <DatePicker placeholder="Birthday" className="inputInfo" />
+        <br />
+        <br />
+        <input placeholder="Email" className="inputInfo" />
+
+        <Input.Password type="password" placeholder="Password" className="input__password" onChange={onchange} />
+        <Input.Password type="password" placeholder="Confirm password" className="input__password" />
 
         <button className="btn_sign-in" onClick={buttonSignUp}>Sign Up</button>
 
