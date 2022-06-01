@@ -1,42 +1,55 @@
-import React, { Component, useRef } from "react";
+import React from "react";
 import './Registration.css'
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 import 'antd/dist/antd.css'
 import { Input, DatePicker, Button, message, Form } from 'antd';
-import { useForm } from "antd/lib/form/Form";
 
 const Registration = () => {
 
   const navigate = useNavigate()
-  // const { reset } = useForm();
+  const [signupForm] = Form.useForm();
 
   const signIn = () => {
     window.location.href = "/login";
     // navigate('/login')
   };
 
-  const buttonSignUp = (event) => {
-    // event.preventDefault()
+  async function buttonSignUp(event) {
 
     if (event.password !== event.confirmPassword) {
       message.error('Password and Confirm password does not the same')
-      // reset()
+      // db.inventory.find( { students: "STUDENT ID" } )
       return;
+    } else {
+      if (event.password.length < 5) {
+        message.error('Require longer password')
+        return
+      }
     }
 
+    //send data to backend
     const registered = {
       "studentID": event.studentID,
       "studentName": event.studentName,
       "dateOfBirth": event.birthday,
       "password": event.password,
-      "email": event.email
+      "email": event.studentEmail
     }
+    const response = await axios.post('http://localhost:4000/LibSystem/signup', registered);
+    const result = response.data;
 
-    axios.post('http://localhost:4000/LibSystem/signup', registered).then(response => console.log(response.data))
-    message.success('Sign Up success')
-
+    if (result.status === 'ok') {
+      message.success('Sign Up success')
+    } else if (result.error === 'User already exits') {
+      message.error("Student ID exist")
+    }
+    else {
+      message.error('Sign Up fail ')
+      console.log("ERROR: ", result)
+    }
+    signupForm.resetFields() //clear form
   }
 
   const onchange = (e) => {
@@ -59,8 +72,8 @@ const Registration = () => {
           <h1>Sign Up</h1>
         </div>
 
-        <Form name="basic" labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} initialValues={{ remember: true }}
-          onFinish={buttonSignUp} onFinishFailed={onFinishFailed} autoComplete="off" >
+        <Form name="basic" labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}
+          onFinish={buttonSignUp} onFinishFailed={onFinishFailed} form={signupForm}>
           <Form.Item name="studentID" rules={[{ required: true, message: 'Do not empty', },]}          >
             <Input placeholder="Student ID" className="inputInfo" />
           </Form.Item>
@@ -73,7 +86,7 @@ const Registration = () => {
             <DatePicker placeholder="Birthday" className="inputInfo" />
           </Form.Item>
 
-          <Form.Item name="email" rules={[{ required: true, message: 'Do not empty', },]}          >
+          <Form.Item name="studentEmail" rules={[{ required: true, message: 'Do not empty', },]}          >
             <Input placeholder="Email" className="inputInfo" />
           </Form.Item>
 

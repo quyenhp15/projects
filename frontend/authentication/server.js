@@ -6,9 +6,13 @@ const routeURLs = require('./routes/routes')
 const cors = require('cors')
 
 dotenv.config
-// mongoose.connect(process.env.DATABASE_ACCESS, () => console.log("Database connected"))
-mongoose.connect("mongodb+srv://User:user@cluster0.dqtd4et.mongodb.net/user?retryWrites=true&w=majority",
-    () => console.log("Database connected"))
+try {
+    mongoose.connect("mongodb+srv://User:user@cluster0.dqtd4et.mongodb.net/user?retryWrites=true&w=majority",
+        () => console.log("Database connected"))
+} catch (error) {
+    console.log("Could not connect database. Erro: ", error)
+}
+
 
 app.use(express.json())
 app.use(cors())
