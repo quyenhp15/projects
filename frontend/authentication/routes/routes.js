@@ -7,28 +7,55 @@ const jwt = require('jsonwebtoken')
 
 const JWT_SECRET = 'sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhfjk'
 
+const multer = require('multer')
+const ImageModel = require('../models/imageModel')
+
+
+//STORE IMAGES
+const Storage = multer.diskStorage({
+    destination: 'uploads',
+    filename: (request, file, cb) => {
+        cb(null, request.body.studentID + '.png')
+    }
+})
+
+const upload = multer({
+    storage: Storage
+}).single('faceID')
+
 router.post('/signup', (request, response) => {
-    const signupStudent = new User({
-        studentID: request.body.studentID,
-        studentName: request.body.studentName,
-        dateOfBirth: request.body.dateOfBirth,
-        email: request.body.email,
-        password: request.body.password,
+    upload(request, response, (error) => {
+        if (error) {
+            console.log('UPLOAD Image error: ', error);
+        } else {
+            const signupStudent = new User({
+                studentID: request.body.studentID,
+                studentName: request.body.studentName,
+                dateOfBirth: request.body.dateOfBirth,
+                email: request.body.email,
+                password: request.body.password,
+                image: {
+                    data: request.file.filename,
+                    contentType: 'image/png'
+                }
+            })
+            console.log("SIGNUP API receive request: ", signupStudent)
+
+            signupStudent.save()
+                .then(() => {
+                    response.json({ status: 'ok', data })
+                    console.log("Signup API pass: ", data)
+                })
+                .catch(error => {
+                    if (error.code === 11000) {
+                        console.log("User exist => FAIL")
+                        return response.json({ status: 'error', error: 'User already exits' })
+                    }
+                    console.log("ERROR at Signup API")
+                    throw error
+                })
+        }
     })
-    console.log("SIGNUP API receive request: ", signupStudent)
-    signupStudent.save()
-        .then(data => {
-            response.json({ status: 'ok', data })
-            console.log("Signup API pass: ", data)
-        })
-        .catch(error => {
-            if (error.code === 11000) {
-                console.log("User exist => FAIL")
-                return response.json({ status: 'error', error: 'User already exits' })
-            }
-            console.log("ERROR at Signup API")
-            throw error
-        })
 })
 
 router.post('/login', async (request, response) => {
