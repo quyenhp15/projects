@@ -1,23 +1,24 @@
 import { useState, useEffect, useRef } from 'react';
 import * as faceapi from 'face-api.js';
-import './App.css';
+// import './App.css';
+import './App.less';
+
 import Webcam from './components/Webcam';
 import { BrowserRouter as Router, Link, Route, Routes, Navigate } from 'react-router-dom';
 
 import Registration from './components/Register/Registration'
-import Homepage from './components/Homepage/Homepage';
-import LoginScreen from './components/Login/LoginScreen'
-
+import AdminPage from './components/Admin/AdminPage';
+import Login from './components/Login/index'
 
 function App() {
 	return (
 		<Router>
 			<Routes>
-				<Route path="/" element={<LoginScreen />} />
-				<Route path="/login" element={<LoginScreen />} />
+				<Route path="/" element={<Login />} />
+				<Route path="/login" element={<Login />} />
 				<Route path="/register" element={<Registration />} />
-				<Route path="/homepage" element={<Homepage />} />
-				<Route path="/homepage" element={localStorage.getItem("accessToken") ? <Homepage /> : <Navigate to="/" />} />
+				{/* <Route path="/homepage" element={<AdminPage />} /> */}
+				<Route path="/homepage" element={localStorage.getItem("accessToken") ? <AdminPage /> : <Navigate to="/" />} />
 			</Routes>
 		</Router>
 	);
