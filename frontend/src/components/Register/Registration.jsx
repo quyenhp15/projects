@@ -1,15 +1,21 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import './Registration.css'
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-
 import 'antd/dist/antd.css'
-import { Input, DatePicker, Button, message, Form } from 'antd';
+import { Input, DatePicker, Button, message, Form, Upload, Modal } from 'antd';
+
+import Webcam from "../Webcam";
 
 const Registration = () => {
 
   const navigate = useNavigate()
   const [signupForm] = Form.useForm();
+
+  // UPLOAD IMAGE variables
+  const [visible, setVisible] = useState(false);
+  const [imageData, setImageData] = useState(null);
+
 
   const signIn = () => {
     window.location.href = "/login";
@@ -18,9 +24,10 @@ const Registration = () => {
 
   async function buttonSignUp(event) {
 
+    console.log("Image signup: ", imageData);
+
     if (event.password !== event.confirmPassword) {
       message.error('Password and Confirm password does not the same')
-      // db.inventory.find( { students: "STUDENT ID" } )
       return;
     } else {
       if (event.password.length < 5) {
@@ -35,7 +42,9 @@ const Registration = () => {
       "studentName": event.studentName,
       "dateOfBirth": event.birthday,
       "password": event.password,
-      "email": event.studentEmail
+      "email": event.studentEmail,
+      "faceID": imageData,
+      "role": 'student'
     }
     const response = await axios.post('http://localhost:4000/LibSystem/signup', registered);
     const result = response.data;
@@ -44,10 +53,9 @@ const Registration = () => {
       message.success('Sign Up success')
     } else if (result.error === 'User already exits') {
       message.error("Student ID exist")
-    }
-    else {
+    } else {
       message.error('Sign Up fail ')
-      console.log("ERROR: ", result)
+      console.log("ERROR: ", result.error)
     }
     signupForm.resetFields() //clear form
   }
@@ -60,6 +68,25 @@ const Registration = () => {
     console.log('Failed:', errorInfo);
   };
 
+  // Function for Upload Image
+  useEffect(() => {
+    console.log('img', imageData);
+  }, [imageData]);
+
+  // UPLOAD IMAGE functions
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const uploadButton = (
+    <div style={{ marginTop: 8, }}      >
+      Upload
+    </div>
+  );
 
   return (
 
@@ -96,6 +123,13 @@ const Registration = () => {
 
           <Form.Item name="confirmPassword" rules={[{ required: true, message: 'Do not empty', },]}          >
             <Input.Password placeholder="Confirm password" className="inputInfo" />
+          </Form.Item>
+
+          <Form.Item >
+            <button onClick={() => setVisible((visible) => !visible)}>
+              {visible ? 'Turn Off' : 'Turn On'}
+            </button>
+            {visible && <Webcam onReceiveImg={setImageData} />}
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16, }}          >
