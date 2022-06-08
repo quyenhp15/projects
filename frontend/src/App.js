@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Link, Route, Routes, Navigate } from 'react-ro
 import Registration from './components/Register/Registration'
 import AdminPage from './components/Admin/AdminPage';
 import Login from './components/Login/index'
+import Student from './components/Student/Student'
 
 function App() {
 	return (
@@ -17,7 +18,8 @@ function App() {
 				<Route path="/" element={<Login />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/register" element={<Registration />} />
-				{/* <Route path="/homepage" element={<AdminPage />} /> */}
+				<Route path="/homepage" element={<AdminPage />} />
+				<Route path="/student" element={<Student />} />
 				<Route path="/homepage" element={localStorage.getItem("accessToken") ? <AdminPage /> : <Navigate to="/" />} />
 			</Routes>
 		</Router>

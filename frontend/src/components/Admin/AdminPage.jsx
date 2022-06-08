@@ -1,7 +1,7 @@
 import React from "react";
 import './Admin.css'
 import axios from "axios";
-import WebcamForCheck from "../Webcam/WebcamForCheck";
+// import WebcamForCheck from "../Webcam/WebcamForCheck";
 
 // import { useNavigate } from 'react-router-dom';
 // import { useHistory } from 'react-router-dom';
