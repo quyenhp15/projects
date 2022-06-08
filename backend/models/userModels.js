@@ -13,7 +13,7 @@ const StudentSchema = new mongoose.Schema({
     dateOfBirth: {
         type: Date,
         required: true,
-        default: Date.now
+        default: new Date()
     }
     ,
     email: {
@@ -26,7 +26,7 @@ const StudentSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        default: Date.now
+        default: new Date()
     },
     faceID: {
         data: Buffer,

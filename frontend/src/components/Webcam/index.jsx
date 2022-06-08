@@ -2,10 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import * as faceapi from 'face-api.js';
 import './index.css';
 
-const Webcam = () => {
+const Webcam = (props) => {
+	const { onReceiveImg } = props;
 	const [initializing, setInitializing] = useState(false);
+	const [faceDetected, setFaceDetected] = useState(false);
+
 	const videoRef = useRef(null);
 	const canvasRef = useRef(null);
+	const canvasSelfieRef = useRef(null);
 
 	const getVideo = () => {
 		navigator.mediaDevices
@@ -32,8 +36,8 @@ const Webcam = () => {
 				faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
 				faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
 			]).then(() => {
-				setInitializing(false);
 				getVideo();
+				setInitializing(false);
 			});
 		};
 		loadModels();
@@ -41,7 +45,7 @@ const Webcam = () => {
 
 	function loadLabeledImages() {
 		//const labels = ['Black Widow', 'Captain America', 'Hawkeye' , 'Jim Rhodes', 'Tony Stark', 'Thor', 'Captain Marvel']
-		const labels = ['KhoiNguyen', 'Sergio Canu']; // for WebCam
+		const labels = ['KhoiNguyen']; // for WebCam
 		return Promise.all(
 			labels.map(async (label) => {
 				const descriptions = [];
@@ -67,9 +71,8 @@ const Webcam = () => {
 		);
 
 		setInterval(async () => {
-			canvasRef.current.innerHTML = await faceapi.createCanvasFromMedia(
-				videoRef.current
-			);
+			canvasRef.current.innerHTML =
+				await faceapi.createCanvasFromMedia(videoRef.current);
 			const displaySize = {
 				width: 800,
 				height: 600,
@@ -99,6 +102,11 @@ const Webcam = () => {
 				drawBox.draw(canvasRef.current);
 			});
 
+			if (detection?.length > 0) {
+				console.log('detected');
+				setFaceDetected(true);
+			}
+
 			// faceapi.draw.drawDetections(
 			// 	canvasRef.current,
 			// 	resizeDetections
@@ -113,15 +121,56 @@ const Webcam = () => {
 		}, 100);
 	};
 
+	const takeSelfie = () => {
+		console.log('TAKE SELFIE BUTTON');
+		// Get the exact size of the video element.
+		const width = videoRef.current.videoWidth;
+		const height = videoRef.current.videoHeight;
+
+		// get the context object of hidden canvas
+		const ctx = canvasSelfieRef.current.getContext('2d');
+
+		// Set the canvas to the same dimensions as the video.
+		canvasSelfieRef.current.width = width;
+		canvasSelfieRef.current.height = height;
+
+		// Draw the current frame from the video on the canvas.
+		ctx.drawImage(videoRef.current, 0, 0, width, height);
+
+		// Get an image dataURL from the canvas.
+		const imageDataURL =
+			canvasSelfieRef.current.toDataURL('image/png');
+		onReceiveImg(imageDataURL);
+	};
+
+	const stopCam = () => {
+		takeSelfie();
+		const stream = videoRef.current.srcObject;
+		const tracks = stream.getTracks();
+
+		tracks.forEach((track) => {
+			track.stop();
+		});
+	};
+
+	useEffect(() => {
+		if (faceDetected) {
+			stopCam();
+		}
+	}, [faceDetected]);
+
 	return (
 		<div className='App'>
 			<span>{initializing ? 'Initializing' : ''}</span>
 			<div className='display-flex justify-content-center'>
 				<video ref={videoRef} onPlay={handleVideoOnPlay}></video>
 				<canvas ref={canvasRef} className='position-absolute' />
+				<canvas ref={canvasSelfieRef}></canvas>
 			</div>
+			<button onClick={stopCam}>Stop</button>
+			<button onClick={takeSelfie}>Take picture</button>
 		</div>
 	);
-}
+};
 
-export default Webcam
+export default Webcam;

@@ -38,16 +38,17 @@ const Registration = () => {
 
     //send data to backend
     const registered = {
-      "studentID": event.studentID,
-      "studentName": event.studentName,
-      "dateOfBirth": event.birthday,
-      "password": event.password,
-      "email": event.studentEmail,
-      "faceID": imageData,
-      "role": 'student'
+      studentID: event.studentID,
+      studentName: event.studentName,
+      dateOfBirth: new Date(),
+      password: event.password,
+      email: event.studentEmail,
+      faceID: imageData,
+      role: 'student'
     }
     const response = await axios.post('http://localhost:4000/LibSystem/signup', registered);
     const result = response.data;
+    console.log(result)
 
     if (result.status === 'ok') {
       message.success('Sign Up success')
@@ -67,6 +68,14 @@ const Registration = () => {
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
+
+  const handleOk = () => {
+    setVisible(visible => !visible);
+  }
+
+  const handleCancle = () => {
+    setVisible(visible => !visible);
+  }
 
   // Function for Upload Image
   useEffect(() => {
@@ -125,12 +134,12 @@ const Registration = () => {
             <Input.Password placeholder="Confirm password" className="inputInfo" />
           </Form.Item>
 
-          <Form.Item >
-            <button onClick={() => setVisible((visible) => !visible)}>
+          {/* <Form.Item >
+            <Button onClick={() => setVisible((visible) => !visible)}>
               {visible ? 'Turn Off' : 'Turn On'}
-            </button>
+            </Button>
             {visible && <Webcam onReceiveImg={setImageData} />}
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item wrapperCol={{ offset: 8, span: 16, }}          >
             <Button type="primary" htmlType="submit" className="btn_sign-up">
@@ -141,7 +150,12 @@ const Registration = () => {
         </Form>
 
         {/* <button className="btn_sign-in" onClick={buttonSignUp}>Sign Up</button> */}
-
+        <Button onClick={() => setVisible((visible) => !visible)}>
+          {visible ? 'Turn Off' : 'Turn On'}
+        </Button>
+        <Modal visible={visible} onOk={handleOk} onCancel={handleCancle}>
+          <Webcam onReceiveImg={setImageData} />
+        </Modal>
         <p style={{ marginTop: "6%", marginLeft: "40%", cursor: "pointer" }} onClick={signIn}>
           Sign Up Now?
         </p>
