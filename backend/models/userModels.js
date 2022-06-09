@@ -32,11 +32,7 @@ const StudentSchema = new mongoose.Schema({
         data: Buffer,
         contentType: String,
         required: false
-    },
-    role: {
-        type: String,
-        required: true
     }
 })
 
-module.exports = mongoose.model('students', StudentSchema)
+module.exports = mongoose.model('users', StudentSchema)

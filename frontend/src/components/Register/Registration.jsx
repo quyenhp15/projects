@@ -59,6 +59,7 @@ const Registration = () => {
       console.log("ERROR: ", result.error)
     }
     signupForm.resetFields() //clear form
+    setImageData(null)
   }
 
   const onchange = (e) => {
@@ -134,12 +135,12 @@ const Registration = () => {
             <Input.Password placeholder="Confirm password" className="inputInfo" />
           </Form.Item>
 
-          {/* <Form.Item >
-            <Button onClick={() => setVisible((visible) => !visible)}>
-              {visible ? 'Turn Off' : 'Turn On'}
-            </Button>
-            {visible && <Webcam onReceiveImg={setImageData} />}
-          </Form.Item> */}
+          <Button onClick={() => setVisible((visible) => !visible)}>
+            {visible ? 'Turn Off' : 'Turn On'}
+          </Button>
+          <Modal visible={visible} onOk={handleOk} onCancel={handleCancle}>
+            <Webcam onReceiveImg={setImageData} />
+          </Modal>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16, }}          >
             <Button type="primary" htmlType="submit" className="btn_sign-up">
@@ -148,17 +149,6 @@ const Registration = () => {
           </Form.Item>
 
         </Form>
-
-        {/* <button className="btn_sign-in" onClick={buttonSignUp}>Sign Up</button> */}
-        <Button onClick={() => setVisible((visible) => !visible)}>
-          {visible ? 'Turn Off' : 'Turn On'}
-        </Button>
-        <Modal visible={visible} onOk={handleOk} onCancel={handleCancle}>
-          <Webcam onReceiveImg={setImageData} />
-        </Modal>
-        <p style={{ marginTop: "6%", marginLeft: "40%", cursor: "pointer" }} onClick={signIn}>
-          Sign Up Now?
-        </p>
       </div>
 
     </div>

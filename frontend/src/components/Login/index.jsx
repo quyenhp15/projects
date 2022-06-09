@@ -22,14 +22,16 @@ const Login = () => {
         const response = await axios.post('http://localhost:4000/LibSystem/login', user)
         const result = response.data;
 
+        console.log('Role: ', result.role);
         if (result.status === 'ok') {
             localStorage.setItem("accessToken", true)
-            navigate('/homepage');
-            message.success('Sign In success')
+            // navigate('/homepage');
+            message.success('Sign In success as role: ', result.role)
+            navigate('/homepage')
         } else {
             message.error(result.error)
         }
-        form.resetFields()
+        // form.resetFields()
     };
 
     return (

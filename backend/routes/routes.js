@@ -58,14 +58,12 @@ router.post('/signup', async (request, response) => {
     //     })
 
     try {
-        console.log('AAAAA')
         const saveUser = await signupStudent.save();
-        console.log('BBBBBB')
         response.json({ status: 'ok', data: saveUser })
     }
     catch (error) {
         console.log(error);
-        response.json({ message: error });
+        response.json({ status: 'error', error: error });
     }
     //     }
     // })
@@ -75,8 +73,10 @@ router.post('/login', async (request, response) => {
 
     console.log("Login API called request: ", request.body)
 
-    const { userID, password } = request.body
-    const user = await User.findOne({ userID }).lean()
+    const { studentID, password } = request.body
+    const user = await User.findOne({ userID: studentID }).lean()
+
+    console.log('User: ', user);
 
     if (!user) {    //check studentID exist
         return response.json({ status: 'error', error: 'Invalid student ID' })
@@ -120,6 +120,28 @@ router.post('/validate-student', async (request, response) => {
     } else {
         response.json({ status: 'error', error: 'Wrong info' })
     }
+})
+
+router.get('/getImage', async (request, response) => {
+    const user = await User.findOne({ userID: 'fhfhfhfhfh' }).lean();
+    if (!user) {    //check studentID exist
+        return response.json({ status: 'error', error: 'Invalid student ID' })
+    }
+    return response.json({ status: 'ok', data: user.faceID.data })
+})
+
+router.get('/find-staff', async (request, response) => {
+
+    console.log('find-staff API call');
+
+    const staffList = await User.find({}).lean()
+
+    if (!staffList) {
+        return response.json({ error: 'No staff found' })
+    } else {
+        return response.json({ data: staffList })
+    }
+
 })
 
 module.exports = router

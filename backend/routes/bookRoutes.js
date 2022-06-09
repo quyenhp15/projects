@@ -13,30 +13,39 @@ bookRoutes.post('/update-book', (request, response) => {
 
     console.log('update-book API called - request: ', request.body);
 
-    const bookRequest = new bookModel({
-        bookID: request.body.bookID,
-        bookName: request.body.bookName,
-        author: request.body.author,
-        produceYear: request.body.produceYear,
-        department: request.body.department,
-        qty: request.body.qty
-    })
-    console.log("update-book API receive request: ", bookRequest)
+    switch (request.body.direction) {
+        case 'ADD':
+            const bookRequest = new bookModel({
+                bookName: request.body.bookName,
+                author: request.body.author,
+                produceYear: request.body.produceYear,
+                department: request.body.department,
+                qty: request.body.qty
+            })
 
-    bookRequest.save()
-        .then((data) => {
-            response.json({ status: 'ok', data })
-            console.log("update-book API pass: ", data)
-        })
-        .catch(error => {
-            if (error.code === 11000) {
-                console.log("User exist => FAIL")
-                return response.json({ status: 'error', error: 'User already exits' })
-            }
-            console.log("ERROR at update-book API: ", error)
-            return response.json({ status: 'error', error: error })
-            throw error
-        })
+            bookRequest.save()
+                .then((data) => {
+                    response.json({ status: 'ok', data })
+                    console.log("update-book API added: ", data)
+                })
+                .catch(error => {
+                    console.log("ERROR at update-book API: ", error)
+                    return response.json({ status: 'error', error: error })
+                    throw error
+                })
+
+            break;
+
+        case EDIT:
+
+
+    }
+
+})
+
+bookRoutes.delete('/delete-book/:id', async (request, response) => {
+    let result = await bookModel.deleteOne({ _id: request.params.id })
+    return response.json({ status: 'ok' })
 })
 
 bookRoutes.get('/find-books', async (request, response) => {
