@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
-import 'antd/dist/antd.css'
+import 'antd/dist/antd.css';
+import './chatbot.less'
 import { ShoppingCartOutlined, PlusCircleTwoTone, RobotFilled, RobotOutlined, UserOutlined } from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { saveMessage } from '../features/messageSlice';
+import { saveMessage, deleteMessage } from '../features/messageSlice';
 import Message from './Sections/Message';
 import { List, Avatar, Button, Card, message, Layout, Typography } from 'antd';
 import { logout } from '../features/userSlice';
@@ -26,6 +27,8 @@ function Chatbot() {
         //     navigate('/')
         //     return;
         // }
+        dispatch(deleteMessage())
+
         eventQuery('firstGreeting')
 
         const conversation = {
@@ -202,15 +205,15 @@ function Chatbot() {
     }
 
     const renderAuthorName = (authors) => {
-        let authorString = ''
-        console.log('length: ', authors.length)
-        for (let i = 0; i < authors.length; i++) {
-            authorString = authorString + authors[i]
-            if (i != authors.length - 1) {
-                authorString += ', '
-            }
-        }
-        return 'Author: ' + authorString
+        // let authorString = ''
+        // console.log('length: ', authors.length)
+        // for (let i = 0; i < authors.length; i++) {
+        //     authorString = authorString + authors[i]
+        //     if (i != authors.length - 1) {
+        //         authorString += ', '
+        //     }
+        // }
+        return 'Author: ' + authors
     }
 
     const handleClickBook = async (bookID) => {
@@ -294,6 +297,7 @@ function Chatbot() {
         try {
             const response = await Axios.get('http://localhost:5000/books/author/' + authorName)
             const result = response.data
+            // console.log('result: ', result)
 
             if (result.status === 'ok') {
                 console.log('return Result: ', result.data)
@@ -517,7 +521,9 @@ function Chatbot() {
     return (
         <div>
             <Header>
-                <Button onClick={() => navigate('/shopping-cart')} >Go to cart</Button>
+                <ShoppingCartOutlined onClick={() => navigate('/shopping-cart')}
+                    style={{ color: 'white', fontSize: '50px' }}
+                />
                 <Button onClick={() => {
                     dispatch(logout())
                     navigate('/')
@@ -525,9 +531,9 @@ function Chatbot() {
             </Header>
             <div style={{ height: 790, width: 700, border: '3px solid black', borderRadius: '7px', marginLeft: '25%' }}>
                 <Content>
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '2rem' }}>
                         <Title level={2} >CHAT BOT APP&nbsp;<RobotOutlined /></Title>
-                        You can type help for finding books
+                        <p>You can type help for finding books</p>
                     </div>
                     <div style={{ height: 644, width: '100%', overflow: 'auto' }}>
                         {allMessages}

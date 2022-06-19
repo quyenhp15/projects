@@ -9,8 +9,11 @@ export const messageSlice = createSlice({
 		saveMessage: (state, action) => {
 			state.messages = state.messages.concat(action.payload);
 		},
+		deleteMessage: (state) => {
+			state.messages = []
+		},
 	},
 });
 
-export const { saveMessage } = messageSlice.actions;
+export const { saveMessage, deleteMessage } = messageSlice.actions;
 export default messageSlice.reducer;

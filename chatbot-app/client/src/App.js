@@ -8,9 +8,10 @@ import './App.less';
 import ShoppingCart from "./components/ShoppingCart/ShoppingCart";
 import Chatbot from './Chatbot/Chatbot';
 import Login from "./components/Login";
+import Order from "./components/Order/Order";
+import AdminPage from "./components/Admin/AdminPage";
 
 const { Title } = Typography;
-
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/chatbot" element={<Chatbot />} />
         <Route path="/shopping-cart" element={<ShoppingCart />} />
+        <Route path="/order" element={<Order />} />
+        <Route path="/admin" element={<AdminPage />} />
+
       </Routes>
     </Router>
 

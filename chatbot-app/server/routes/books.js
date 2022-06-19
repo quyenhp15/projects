@@ -20,7 +20,26 @@ bookRoutes.get('/', async (request, response) => {
     if (!bookList) {
         return response.json({ error: 'No book found' })
     } else {
-        return response.json({ data: bookList })
+        const returnedBookList = []
+        for (let book of bookList) {
+            const authorIDList = await bookAuthorModel.find({ bookID: book._id }).lean()
+            const authors = []
+            for (let authorID of authorIDList) {
+                const author = await Author.findOne({ _id: authorID.authorID }).lean()
+                const authorName = author.authorName
+                authors.push(authorName)
+            }
+
+            const bookInfo = {
+                _id: book._id,
+                bookName: book.bookName,
+                department: book.department,
+                qty: book.qty,
+                author: authors
+            }
+            returnedBookList.push(bookInfo)
+        }
+        return response.json({ data: returnedBookList })
     }
 })
 
@@ -75,6 +94,23 @@ bookRoutes.delete('/delete-book/:id', async (request, response) => {
 
 })
 
+bookRoutes.delete('/:cartID/delete/:bookID', async (request, response) => { //delete bookID from cartID
+
+    const inputCartID = request.params.cartID
+    const inputBookID = request.params.bookID
+    console.log('DELETE /delete from cart API called - request: ' + inputCartID + '\t' + inputBookID)
+
+    try {
+        const deletedBook = await cartItemModel.findOne({ bookID: inputBookID, cartID: inputCartID }).lean()
+        await cartItemModel.deleteOne({ bookID: inputBookID, cartID: inputCartID })
+        return response.json({ status: 'ok', data: deletedBook })
+
+    } catch (e) {
+        console.log('Cannot find book')
+        return response.json({ status: 'error', error: 'Cannot find book ID: ' })
+    }
+})
+
 bookRoutes.get('/departments', async (request, response) => { //Get all departments
     console.log('/departments API called')
 
@@ -99,14 +135,35 @@ bookRoutes.get('/author/:authorName', async (request, response) => { //Get book 
         return response.json({ status: 'error', data: 'No author find' })
     } else {
         const bookIDList = await BookAuthor.find({ authorID: author._id }).lean()
-
         if (!bookIDList) {
             return response.json({ status: 'error', data: 'No book find' })
         } else {
             const bookList = []
+            console.log('bookIDList: ', bookIDList)
+
             for (let book of bookIDList) {
-                const foundBook = await bookModel.findOne({ bookID: book._id }).lean()
-                bookList.push(foundBook)
+                const foundBook = await bookModel.findOne({ _id: book.bookID }).lean()
+                // const b = {}
+                console.log('foundBook: ', foundBook)
+
+                const authorIDList = await bookAuthorModel.find({ bookID: foundBook._id }).lean()
+                console.log('authorIDList: ', authorIDList)
+
+                const authorList = []
+                for (let authorID of authorIDList) {
+                    const author = await Author.findOne({ _id: authorID.authorID }).lean()
+                    const authorName = author.authorName
+                    authorList.push(authorName)
+                }
+
+                const b = {
+                    ...foundBook,
+                    // authorName: authorList
+                    authorName: authorList
+                }
+
+                // bookList.push(foundBook)
+                bookList.push(b)
             }
             console.log('Book list: ', bookList)
             response.json({ status: 'ok', data: bookList })

@@ -1,6 +1,7 @@
 const { request, response } = require('express')
 const express = require('express')
 const router = express.Router()
+
 const User = require('../models/userModels')
 const jwt = require('jsonwebtoken')
 const JWT_SECRET = 'sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhfjk'
@@ -121,7 +122,10 @@ router.post('/login', async (request, response) => {
             JWT_SECRET
         )
         console.log('Login API passed')
-        return response.json({ status: 'ok', data: { userID: userID, name: user.name } })
+        const shopping_cart = await cartModel.findOne({ userID: userID })
+        shopping_cart_id = shopping_cart._id
+        console.log('shopping_cart_id: ', shopping_cart_id)
+        return response.json({ status: 'ok', data: { userID: userID, name: user.name, shopping_cart_id: shopping_cart_id, faceID: user.faceID } })
     } else {
         console.log('Error at Login API')
         response.json({ status: 'error', error: 'Wrong password' })

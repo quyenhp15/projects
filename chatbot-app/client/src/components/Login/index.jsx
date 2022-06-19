@@ -37,7 +37,7 @@ const Login = () => {
         } else {
             message.error(result.error)
         }
-        // form.resetFields()
+        form.resetFields()
     };
 
     return (

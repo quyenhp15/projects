@@ -10,7 +10,6 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: false }));
 const mongoose = require('mongoose')
 
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -26,7 +25,7 @@ try {
 
 app.use('/user', require('./routes/user.js'))
 app.use('/books', require('./routes/books'))
-
+app.use('/orders', require('./routes/orders'))
 
 app.use('/api/dialogflow', require('./routes/dialogflow'));
 
