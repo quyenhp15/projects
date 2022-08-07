@@ -1,9 +1,0 @@
-POST http://localhost:4000/LibSystem/signup
-Content-Type: application/json
-
-{
-    "studentID": "STUDENT ID",
-    "studentName": "ewfebnbenbwf",
-    "email": "quyenhggevdfvp135@gmail.com",
-    "password": "15060fdgreg0."
-}

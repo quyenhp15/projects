@@ -1,0 +1,15 @@
+npm init
+
+npm i actions-on-google cors dialogflow dialogflow-fulfillment dotenv express mongoose --legacy-peer-deps
+
+npm i nodemon
+
+npm i dotenv cors
+
+npm i jsonwebtoken
+
+npm i bcryptjs
+
+npm i xlxs
+
+extension: REST client

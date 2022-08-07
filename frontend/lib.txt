@@ -1,8 +1,0 @@
-npm i
-npm i react-router-dom
-npm i axios
-npm i antd
-
-npm i craco-less --legacy-peer-deps
-npm i less less-loader framer-motion  --legacy-peer-deps 
-npm i @craco/craco --legacy-peer-deps
