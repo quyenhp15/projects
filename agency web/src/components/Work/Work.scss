@@ -1,0 +1,26 @@
+@import '../abstraction/_mixins';
+
+.work {
+    margin-top: 9rem;
+
+    &__btn {
+        text-align: center;
+        display: none;
+
+        & > button {
+            padding: 3rem 10rem;
+            border: .5rem solid white;
+            background-color: transparent;
+            color: white;
+            font-weight: 600;
+            font-size: 3.5rem;
+            margin-top: 10rem;
+        }
+
+        @include respond(phone) {
+            display: block;
+        }
+    }
+
+    
+}

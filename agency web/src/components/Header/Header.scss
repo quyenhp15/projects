@@ -1,0 +1,83 @@
+@import '../abstraction/_mixins';
+
+.header {
+    height: 100vh;
+    position: relative;
+    color: #fff;
+
+    &__bar {
+        padding: 4rem 7rem;
+        display: flex;
+        justify-content: space-between;
+        text-transform: uppercase;
+    }
+
+    &__title {
+        width: 100%;
+
+        position: absolute;
+        top: 55%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    &__banner {
+        font-weight: 600;
+        font-size: 12rem;
+        margin-bottom: 3rem;
+
+        & span {
+            display: block;
+        }
+    }
+
+    &__description {
+        font-weight: 400;
+        font-size: 3.2rem;    
+        line-height: 4rem;
+        color: #BABABA;
+        width: 65%;
+        
+        margin: 0 auto;
+    }
+
+    &__menu > div {
+        width: 35px;
+        height: 5px;
+        background-color: #fff;
+        margin: 6px 0;
+        display: none;
+
+        @include respond(phone) {
+            display: block; 
+        }
+    }
+}
+
+.logo h1 {
+    font-size: 2.4rem;
+    font-weight: 600;
+}
+
+.navigation {
+    &__list {
+        display: flex;
+    }
+
+    &__item {
+        list-style: none;
+        font-size: 2rem;
+        font-weight: 400;
+
+        &:not(:last-child) {
+            margin-right: 5rem;
+        }
+    }
+
+    @include respond(phone) {
+        display: none; 
+    }
+}
+
+

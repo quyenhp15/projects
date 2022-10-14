@@ -1,0 +1,31 @@
+@import './components/abstraction/_mixins';
+
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+
+  @include respond(phone) {
+    font-size: 35%;
+  }
+}
+
+
+
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  box-sizing: inherit;
+}
+
+body {
+  font-family: 'Inter';
+  font-style: normal;
+  background-color: #000;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

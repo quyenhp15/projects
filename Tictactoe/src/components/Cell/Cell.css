@@ -1,0 +1,15 @@
+.cell {
+    border: 1px solid blue;
+    cursor: pointer;
+
+    /* flex-basis: 100px; */
+    width: 4rem;
+    height: 4rem;
+    /* flex-basis: 20%; */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 2rem;
+}
